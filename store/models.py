@@ -17,11 +17,11 @@ class BaseModel(models.Model):
 # request.user.profile.profile_picture
 class UserProfile(BaseModel):
 
-    bio=models.CharField(max_length=200)
+    bio=models.CharField(max_length=200,null=True)
 
-    profile_picture=models.ImageField(upload_to="profilepictures",null=True,blank=True)
+    profile_picture=models.ImageField(upload_to="profilepictures",null=True,blank=True,default="profilepictures/default.png")
 
-    phone=models.CharField(max_length=200)
+    phone=models.CharField(max_length=200,null=True)
 
     owner=models.OneToOneField(User,on_delete=models.CASCADE,related_name="profile")
 
@@ -30,7 +30,7 @@ class UserProfile(BaseModel):
 
 
 class Tag(BaseModel):
-
+  
     title=models.CharField(max_length=200)
 
     def __str__(self) -> str:
@@ -63,11 +63,17 @@ class WishList(BaseModel):
 
 class WishListItem(BaseModel):
 
-    wishlist_object=models.ForeignKey(WishList,on_delete=models.CASCADE,related_name="basket-item")
+    wishlist_object=models.ForeignKey(WishList,on_delete=models.CASCADE,related_name="basket_item")
 
     project_object=models.ForeignKey(Project,on_delete=models.CASCADE)
 
     is_order_placed=models.BooleanField(default=False)
+
+
+
+    class Meta:
+
+        unique_together=("wishlist_object","project_object")
 # WishListItems.objects.filter(wishlist_object__owner=request.user,is_order_placed=False)
 class Order(BaseModel):
 
@@ -78,8 +84,23 @@ class Order(BaseModel):
     order_id=models.CharField(max_length=200,null=True)
 
     
+from django.db.models.signals import post_save
+def create_user_profile(sender,instance,created,**kwargs):
+     if created:
+
+        UserProfile.objects.create(owner=instance)
+
+post_save.connect(create_user_profile,sender=User)
 
 
+
+def create_wishlist(sender,instance,created,**kwargs):
+
+    if created:
+
+        WishList.objects.create(owner=instance)
+
+post_save.connect(create_wishlist,sender=User)        
 
 
     
