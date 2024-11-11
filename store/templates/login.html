@@ -1,26 +1,37 @@
+{%load static%}
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <link rel="stylesheet" href="{%static 'css/bootstrap.min.css'%}">
 </head>
 
 <body>
-    <div class="container">
+    <div class="container ">
+        <div class="card mb-3" style="max-width: 70%; height: 300px;">
+            <div class="row g-0">
+                <div class="col-md-4 ">
+                    <img src="{%static 'images/login.png.'%}" class="rounded-start" alt="..."
+                        style="height: 300px; width: 100%; margin-top: 200px; margin-left: 200px; border-radius: 10px 10px 10px 10px;">
+                </div>
+                <div class="col-md-8 ">
+                    <div class="card-body">
+                        <form action="" method="post" style="height: 500px; margin-top: 300px; margin-left: 200px;">
+                            {%csrf_token%}
+                            {{form}}
+                            <button type="submit">submit</button>
+                            <a href="{%url 'reset'%}" class="">password reset</a>
+                        </form>
 
-        
-        <form action="" method="post">
-
-            {%csrf_token%}
-
-            {{form}}
-
-            <button type="submit">login</button>
-
-        </form>
-    </div>
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
 </body>
 
 </html>

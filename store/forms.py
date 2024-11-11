@@ -59,3 +59,18 @@ class ProjectForm(forms.ModelForm):
 
 
         ]
+
+
+
+class PasswordResetForm(forms.Form):
+
+
+    username=forms.CharField()
+
+    email=forms.CharField()
+
+    password1=forms.CharField(widget=forms.PasswordInput)
+
+    password2=forms.CharField(widget=forms.PasswordInput)
+
+    
