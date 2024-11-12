@@ -24,6 +24,8 @@ from django.views.decorators.cache import never_cache
 
 from django.contrib.auth.models import User
 
+from decouple import config
+
 
 
 def send_email():
@@ -335,11 +337,11 @@ class CheckOutView(View):
     template_name="check_out.html"
     def get(self,request,*args,**kwargs):
 
-        KEY_ID="rzp_test_bSgPSgM6pYLVno"
-        KET_SECRET="zSuIh5beN9zbYsuRYO9cSZYl"
+        KEY_ID=config('KEY_ID')
+        KEY_SECRET=config('KEY_SECRET')
 
 
-        client = razorpay.Client(auth=(KEY_ID,KET_SECRET))
+        client = razorpay.Client(auth=(KEY_ID,KEY_SECRET))
 
         amount=request.user.basket.basket_item.filter(is_order_placed=False).values("project_object").aggregate(total=Sum("project_object__price")).get("total")
 
@@ -377,10 +379,10 @@ class PaymentVerificationView(View):
 
         print(request.POST)
 
-        KEY_ID="rzp_test_bSgPSgM6pYLVno"
-        KET_SECRET="zSuIh5beN9zbYsuRYO9cSZYl"
+        KEY_ID=config('KEY_ID')
+        KEY_SECRET=config('KEY_SECRET')
 
-        client=razorpay.Client(auth=(KEY_ID,KET_SECRET))
+        client=razorpay.Client(auth=(KEY_ID,KEY_SECRET))
 
         try:
             client.utility.verify_payment_signature(request.POST)
